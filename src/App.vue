@@ -1,8 +1,6 @@
 <template>
-  <h1>今日头条发布系统</h1>
-  <router-view/>
+  <!-- 路由出口，匹配的路由页面就会显示到router-view里 -->
+  <router-view />
 </template>
 
-<style lang="less">
-
-</style>
+<style lang="less"></style>
