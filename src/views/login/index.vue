@@ -56,8 +56,9 @@
 <script>
 import { message } from 'ant-design-vue'
 import { ref, reactive } from 'vue'
-import { requestNet } from '@/utils/request'
-import Loading from '@/components/LoginLoading/Loading'
+import { login } from '@/api/user'
+import useLoginValidate from '@/components/Login/useLoginValidate'
+import Loading from '@/components/Login/Loading'
 export default {
   name: 'LoginIndex',
   components: {
@@ -75,79 +76,29 @@ export default {
     // 获取form表单元素(变量与ref名字同名即可)
     const loginForm = ref()
 
-    // 自定义校验规则，返回promise对象，这是因为触发校验方法使用的是promise
-    const validateCheck = async function (rule, value) {
-      // rule默认传，value就是表单元素的value，对于checkbox，选中了value就为true
-      if (!value) {
-        // eslint-disable-next-line prefer-promise-reject-errors
-        return Promise.reject('未勾选协议')// 内容就是规则的message
-      } else {
-        return Promise.resolve()
-      }
-    }
-
-    // 表单验证规则配置
-    const formRules = {
-      // 要验证的数据名(与表单项指定的name属性名一致)：规则列表[]
-      mobile: [
-        {
-          required: true, // 必填，不能为空
-          message: '手机号不能为空', // 提示消息
-          trigger: 'blur'// 触发条件:当内容修改时触发
-        },
-        {
-          pattern: /^1\d{10}$/, // 正则表达式
-          message: '请输入正确的号码格式',
-          trigger: 'change'// 当内容修改时触发
-        }
-      ],
-      code: [
-        {
-          required: true,
-          message: '验证码不能为空',
-          trigger: 'blur'
-        },
-        {
-          pattern: /^\d{6}$/,
-          message: '长度为6个数字',
-          trigger: 'change'
-        }
-      ],
-      isAgree: [
-        // 对于checkbox，一般要自定义验证规则，使用自定义验证规则要在对象内配置validator属性
-        // 不需要写message，因为自定义校验函数里配置了message
-        {
-          // 校验器使用前面定义的校验函数
-          validator: validateCheck,
-          trigger: 'change'
-        }
-      ]
-    }
+    // 从表单验证生成函数中获取表单验证规则
+    const formRules = useLoginValidate()
 
     // 方法
     const loginMethod = function () {
       // loading组件显示
       isLoadingShow.value = true
-      requestNet({
-        method: 'POST',
-        url: '/mp/v1_0/authorizations',
-        // data用来设置post请求体
-        data: user
-      }).then(value => {
+      // 使用api接口的登录方法
+      login(user).then(value => {
         // 验证通过，提交登录
         console.log(value.data)
         isLoadingShow.value = false
         message.success('登录成功')
       }).catch(() => {
-        message.error('登录失败，手机或验证码错误')
         isLoadingShow.value = false
+        message.error('登录失败，手机号或验证码错误')
       })
     }
 
     const onLogin = function () {
       // 通过ref属性获得指定的表单组件，手动触发表单验证，validate返回promise对象
       loginForm.value.validate().then(() => {
-        // 表单验证通过了则请求接口
+        // 表单验证通过了则调用loginMethod方法
         loginMethod()
       }).catch(() => {
         console.log('表单验证失败')
