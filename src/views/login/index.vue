@@ -56,22 +56,26 @@
 <script>
 import { message } from 'ant-design-vue'
 import { ref, reactive } from 'vue'
+import { useRouter } from 'vue-router'
 import { login } from '@/api/user'
 import useLoginValidate from '@/components/Login/useLoginValidate'
 import Loading from '@/components/Login/Loading'
+
 export default {
   name: 'LoginIndex',
   components: {
     Loading
   },
   setup: function (props, context) {
+    // 获取路由对象
+    const $router = useRouter()
     // 防止网络请求慢出现用户多次点击触发登录请，交互反馈更好
     const isLoadingShow = ref(false) // 登录的loading状态
     // 获取表单数据
     const user = reactive({
-      mobile: '', // 手机号
-      code: '', // 验证码
-      isAgree: false // 是否同意协议
+      mobile: '13911111111', // 手机号
+      code: '246810', // 验证码
+      isAgree: true // 是否同意协议
     })
     // 获取form表单元素(变量与ref名字同名即可)
     const loginForm = ref()
@@ -86,9 +90,12 @@ export default {
       // 使用api接口的登录方法
       login(user).then(value => {
         // 验证通过，提交登录
-        console.log(value.data)
         isLoadingShow.value = false
-        message.success('登录成功')
+        // 拿到接口返回的用户令牌token并将token存储到localStorage，方便数据共享
+        window.localStorage.setItem('user', value.data.data.token)
+        // 进入首页
+        $router.push({ name: 'Home' })
+        message.success(`用户：${value.data.data.name} 登入后台`)
       }).catch(() => {
         isLoadingShow.value = false
         message.error('登录失败，手机号或验证码错误')
@@ -177,13 +184,14 @@ export default {
     }
   }
 }
-.loading{
-  position:fixed;
-  left:0;
+
+.loading {
+  position: fixed;
+  left: 0;
   top: 0;
-  bottom:0;
-  right:0;
+  bottom: 0;
+  right: 0;
   z-index: 3;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
 }
 </style>

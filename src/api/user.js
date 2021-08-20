@@ -9,10 +9,19 @@ import { requestNet } from '@/utils/request'
 // 封装起来方便重用，管理和维护更加方便
 
 // 用户登录
+// 接口要求：把用户信息作为data传入
 export const login = (user) => {
   return requestNet({
     method: 'POST',
     url: '/mp/v1_0/authorizations',
     data: user
+  })
+}
+// 获取用户资料
+// 接口要求：把用户身份令牌token放到请求头中(在请求拦截器中实现)
+export const getUserProfile = (userToken) => {
+  return requestNet({
+    method: 'GET',
+    url: '/mp/v1_0/user/profile'
   })
 }

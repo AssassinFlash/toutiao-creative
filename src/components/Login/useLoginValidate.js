@@ -12,13 +12,13 @@ export default function () {
   }
 
   // 表单验证规则配置
-  const formRules = {
+  return {
     // 要验证的数据名(与表单项指定的name属性名一致)：规则列表[]
     mobile: [
       {
         required: true, // 必填，不能为空
         message: '手机号不能为空', // 提示消息
-        trigger: 'blur'// 触发条件:当内容修改时触发
+        trigger: 'blur'// 触发条件:当失去焦点时触发
       },
       {
         pattern: /^1\d{10}$/, // 正则表达式
@@ -48,5 +48,4 @@ export default function () {
       }
     ]
   }
-  return formRules
 }
