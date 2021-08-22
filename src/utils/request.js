@@ -1,5 +1,7 @@
 // 引入axios
 import axios from 'axios'
+import JSONbig from 'json-bigint'
+// 引入json-bigint处理文章ID
 // 如果设置axios.default.baseURL，那么只能设置1个
 
 // 请求配置
@@ -14,7 +16,19 @@ import axios from 'axios'
 const requestNet = axios.create({
   // 请求的基础url（黑马网页），通过create方法可以设置多个baseURL
   // 不同的axios实例可以有不同的配置，且不会冲突
-  baseURL: 'http://api-toutiao-web.itheima.net'
+  baseURL: 'http://api-toutiao-web.itheima.net',
+  // 定制后端返回的原始数据的处理，不让axios走默认的JSON.parse把数据转换成JS对象
+  // 参数data就是后端返回的原始数据（未经处理的JSON格式的字符串）
+  transformResponse: [function (data) {
+    // 默认的是return JSON.parse(data)
+    try {
+      return JSONbig.parse(data)
+    } catch {
+      // 如果后端返回的不是标准格式的JSON字符串，JSONbig.parse的调用就会报错
+      // 就用catch捕获异常，直接返回原始数据
+      return data
+    }
+  }]
 })
 // 请求拦截器，所有请求会先经过请求拦截器拦截下来，进行相关检查和配置
 requestNet.interceptors.request.use(config => {

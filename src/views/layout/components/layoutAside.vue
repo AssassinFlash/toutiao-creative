@@ -6,7 +6,7 @@
   >
     <div class="title-image">
       <img src="../../../assets/superman.svg" alt="">
-<!--      <span>{{ istitleShow }}</span>-->
+      <!--      <span>{{ istitleShow }}</span>-->
     </div>
     <!--
         a-menu-item的key不能重复-->
@@ -28,7 +28,7 @@ import useMenu from '@/components/Home/useMenu'
 import { createFromIconfontCN } from '@ant-design/icons-vue'
 
 const IconFont = createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/font_2758474_4st5wpbhq98.js'
+  scriptUrl: '//at.alicdn.com/t/font_2758474_a0gbql4hd8u.js'
 })
 export default {
   name: 'LayoutAside',

@@ -11,7 +11,9 @@
           <span class="title">志豪今日头条管理后台</span>
           <a-dropdown>
             <div class="avatar-wrap">
-              <img :src="userProfile.photo" alt="">
+              <a-spin :spinning="spin">
+                <img :src="userProfile.photo" alt="" v-if="userProfile.photo">
+              </a-spin>
               <span>{{ userProfile.name }}</span>
               <icon-font type="icon-xiala" class="avatar-down"/>
             </div>
@@ -31,7 +33,7 @@
         </a-layout-header>
       </Suspense>
       <!--内容-->
-      <a-layout-content class="layout-main">
+      <a-layout-content class="layout-main" style="overflow: auto">
         <!--子路由出口-->
         <router-view></router-view>
       </a-layout-content>
@@ -48,7 +50,7 @@ import { ref, onBeforeMount, createVNode } from 'vue'
 import { useRouter } from 'vue-router'
 
 const IconFont = createFromIconfontCN({
-  scriptUrl: '//at.alicdn.com/t/font_2758474_4st5wpbhq98.js'
+  scriptUrl: '//at.alicdn.com/t/font_2758474_a0gbql4hd8u.js'
 })
 export default {
   name: 'index',
@@ -61,6 +63,8 @@ export default {
     const $router = useRouter()
     // 菜单的收缩与展开
     const collapse = ref(false)
+    // 顶部用户头像显示延迟
+    const spin = ref(true)
 
     const userProfile = ref({})
     // 利用onBeforeMount钩子函数的特性，在挂载之前获取到用户信息
@@ -70,6 +74,7 @@ export default {
     onBeforeMount(async () => {
       const res = await getUserProfile(window.localStorage.getItem('user'))
       userProfile.value = res.data.data
+      spin.value = false
     })
 
     // 方法
@@ -109,6 +114,7 @@ export default {
     return {
       userProfile,
       collapse,
+      spin,
       onLogout
     }
   }

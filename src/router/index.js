@@ -18,6 +18,15 @@ const routes = [
           requireAuth: true
         },
         component: () => import('@/views/home/index')
+      },
+      {
+        path: '/article',
+        name: 'Article',
+        // 元信息
+        meta: {
+          requireAuth: true
+        },
+        component: () => import('@/views/article/index')
       }
     ]
   }
