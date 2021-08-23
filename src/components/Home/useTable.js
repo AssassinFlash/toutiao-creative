@@ -1,4 +1,4 @@
-import { getArticle, getArticleChannels } from '@/api/article'
+import { getArticles, getArticleChannels } from '@/api/article'
 
 export async function useArticleChannels () {
   const res = await getArticleChannels()
@@ -44,7 +44,7 @@ export function useTableColumns () {
 }
 
 export async function useTableData (params) {
-  const res = await getArticle(params)
+  const res = await getArticles(params)
   return res.data
 }
 

@@ -3,7 +3,7 @@
 import { requestNet } from '@/utils/request'
 
 // 获取文章列表
-export const getArticle = params => {
+export const getArticles = params => {
   return requestNet({
     method: 'GET',
     url: '/mp/v1_0/articles',
@@ -33,7 +33,39 @@ export const deleteArticle = articleId => {
   return requestNet({
     method: 'DELETE',
     // 接口文档写的路径参数需要在url中传递
-    // :xxx 就是路径参数
+    // :xxx 就是路径参数，把数据替换掉:xxx
     url: `/mp/v1_0/articles/${articleId}`
+  })
+}
+
+// 新建文章
+export const addArticle = (data, draft = false) => {
+  return requestNet({
+    method: 'POST',
+    url: '/mp/v1_0/articles',
+    params: {
+      draft
+    },
+    data
+  })
+}
+
+// 获取指定文章
+export const getArticle = (articleId) => {
+  return requestNet({
+    method: 'GET',
+    url: `/mp/v1_0/articles/${articleId}`
+  })
+}
+
+// 编辑文章
+export const updateArticle = (articleId, data, draft = false) => {
+  return requestNet({
+    method: 'PUT',
+    url: `/mp/v1_0/articles/${articleId}`,
+    params: {
+      draft
+    },
+    data
   })
 }

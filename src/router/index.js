@@ -1,35 +1,46 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
+import {
+  createRouter,
+  createWebHashHistory
+} from 'vue-router'
 
-const routes = [
-  {
-    path: '/login',
-    name: 'Login',
-    component: () => import('../views/login/index.vue')
-  },
-  {
-    path: '/', // 有了默认子路由，父路由就不要设置命名
-    component: () => import('@/views/layout/index'),
-    children: [
-      {
-        path: '', // path为空，为默认子路由，即父路由的路由出口默认渲染这个路由
-        name: 'Home',
-        // 配置元信息，表示需要对用户令牌进行校验
-        meta: {
-          requireAuth: true
-        },
-        component: () => import('@/views/home/index')
+const routes = [{
+  path: '/login',
+  name: 'Login',
+  component: () => import('../views/login/index.vue')
+},
+{
+  path: '/', // 有了默认子路由，父路由就不要设置命名
+  component: () => import('@/views/layout/index'),
+  children: [
+    {
+      path: '', // path为空，为默认子路由，即父路由的路由出口默认渲染这个路由
+      name: 'Home',
+      // 配置元信息，表示需要对用户令牌进行校验
+      meta: {
+        requireAuth: true
       },
-      {
-        path: '/article',
-        name: 'Article',
-        // 元信息
-        meta: {
-          requireAuth: true
-        },
-        component: () => import('@/views/article/index')
-      }
-    ]
-  }
+      component: () => import('@/views/home/index')
+    },
+    {
+      path: '/article',
+      name: 'Article',
+      // 元信息
+      meta: {
+        requireAuth: true
+      },
+      component: () => import('@/views/article/index')
+    },
+    {
+      path: '/publish',
+      name: 'Publish',
+      // 元信息
+      meta: {
+        requireAuth: true
+      },
+      component: () => import('@/views/publish/index')
+    }
+  ]
+}
 ]
 
 const router = createRouter({
@@ -54,7 +65,9 @@ router.beforeEach((to, from, next) => {
         next()
       } else {
         console.log('未登录，跳转到登录页')
-        next({ name: 'Login' })
+        next({
+          name: 'Login'
+        })
       }
     } else {
       next()
