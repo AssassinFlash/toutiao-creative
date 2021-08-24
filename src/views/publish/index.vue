@@ -14,18 +14,22 @@
               <a-breadcrumb-item> {{ $route.params.id? '修改文章' : '发布文章' }} </a-breadcrumb-item>
             </a-breadcrumb>
           </template>
-          <a-form :model="articleParams"
+          <a-form ref="publishForm"
+                  :model="articleParams"
+                  :rules='formRules'
                   :label-col="labelCol"
                   :wrapper-col="wrapperCol">
-            <a-form-item label="标题">
+            <a-form-item label="标题"
+                         name="title">
               <a-input v-model:value='articleParams.title'
                        allow-clear />
             </a-form-item>
-            <a-form-item label="内容">
-              <!-- <a-textarea v-model:value='articleParams.content'
+            <a-form-item label="内容"
+                         name="content">
+              <a-textarea v-model:value='articleParams.content'
                           :auto-size="{ minRows: 4, maxRows: 8 }"
                           allow-clear
-                          showCount></a-textarea> -->
+                          showCount></a-textarea>
             </a-form-item>
             <a-form-item label="封面">
               <a-radio-group name='articleImage'
@@ -36,7 +40,8 @@
                 <a-radio :value="-1">自动</a-radio>
               </a-radio-group>
             </a-form-item>
-            <a-form-item label="频道">
+            <a-form-item label="频道"
+                         name='channel_id'>
               <a-select style="width:300px"
                         placeholder="请选择频道"
                         v-model:value='articleParams.channel_id'
@@ -49,9 +54,7 @@
             </a-form-item>
             <a-form-item :wrapper-col="{ span: 14, offset: 1 }">
               <a-button type="primary"
-                        @click="onPublish(false)">{{ $route.params.id? '修改' : '发表' }}</a-button>
-              <a-button style="margin-left: 10px"
-                        @click="onPublish(true)">存入草稿</a-button>
+                        @click="onValidate()">{{ $route.params.id? '修改' : '发表' }}</a-button>
             </a-form-item>
           </a-form>
         </a-card>
@@ -65,12 +68,18 @@ import { ref, Suspense, onBeforeMount } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
 import { getArticleChannels, addArticle, getArticle, updateArticle } from '@/api/article'
+import { useFormRules } from '@/components/Home/usePublish'
 export default {
   name: 'PublishIndex',
   components: {
     Suspense
   },
   setup () {
+    // 加载表单验证对象
+    const formRules = useFormRules()
+    // 获取表单元素
+    const publishForm = ref()
+
     // 加载数据状态
     const loading = ref(false)
     // 获得修改按钮传来的数据
@@ -97,7 +106,6 @@ export default {
     })
     // 发布文章的方法
     const onPublish = async function (draft = false) {
-      loading.value = true
       // 如果是修改文章，则执行修改操作，否则执行添加操作
       if ($route.params.id) {
         await updateArticle($route.params.id, articleParams.value)
@@ -109,6 +117,15 @@ export default {
       // 无论是修改文章还是发布文章，成功了之后都要跳转到内容管理页面
       $router.push({ name: 'Article' })
       loading.value = false
+    }
+
+    // 手动触发表单验证
+    const onValidate = function () {
+      publishForm.value.validate().then(() => {
+        onPublish(false)
+      }).catch(err => {
+        message.error(`表单验证失败${err}`, 3)
+      })
     }
 
     // 获得指定文章
@@ -137,10 +154,12 @@ export default {
       wrapperCol: {
         span: '14'
       },
+      formRules,
+      publishForm,
       loading,
       articleParams,
       channels,
-      onPublish
+      onValidate
     }
   }
 }

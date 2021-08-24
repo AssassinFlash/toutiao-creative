@@ -39,7 +39,7 @@ export default {
     // 生成菜单项
     const menu = useMenu()
     // 选择的菜单项
-    const selectedKeys = ref(['/'])
+    const selectedKeys = ref(['/home'])
     // 获得路由对象
     const $router = useRouter()
 

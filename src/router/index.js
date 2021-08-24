@@ -9,11 +9,12 @@ const routes = [{
   component: () => import('../views/login/index.vue')
 },
 {
-  path: '/', // 有了默认子路由，父路由就不要设置命名
+  path: '/home', // 有了默认子路由，父路由就不要设置命名
+  redirect: { name: 'Home' },
   component: () => import('@/views/layout/index'),
   children: [
     {
-      path: '', // path为空，为默认子路由，即父路由的路由出口默认渲染这个路由
+      path: '/home/index', // path为空，为默认子路由，即父路由的路由出口默认渲染这个路由
       name: 'Home',
       // 配置元信息，表示需要对用户令牌进行校验
       meta: {
@@ -22,7 +23,7 @@ const routes = [{
       component: () => import('@/views/home/index')
     },
     {
-      path: '/article',
+      path: '/home/article',
       name: 'Article',
       // 元信息
       meta: {
@@ -31,13 +32,22 @@ const routes = [{
       component: () => import('@/views/article/index')
     },
     {
-      path: '/publish',
+      path: '/home/publish',
       name: 'Publish',
       // 元信息
       meta: {
         requireAuth: true
       },
       component: () => import('@/views/publish/index')
+    },
+    {
+      path: '/home/image',
+      name: 'Images',
+      // 元信息
+      meta: {
+        requireAuth: true
+      },
+      component: () => import('@/views/image/index')
     }
   ]
 }
@@ -57,7 +67,7 @@ router.beforeEach((to, from, next) => {
   // 如果登录了，允许通过
   // 获取本地存储的用户令牌
   const userToken = window.localStorage.getItem('user')
-  if (to.path !== '/login') {
+  if (to.path !== '/home/login') {
     if (to.meta.requireAuth === true) {
       console.log('该页面不是登录页，且需要校验')
       if (userToken) {

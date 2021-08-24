@@ -2,37 +2,37 @@ export default function () {
   // 生成侧边栏菜单
   return [
     {
-      path: '/',
+      path: '/home',
       title: '首页',
       icon: 'icon-shouye-black'
     },
     {
-      path: '/article',
+      path: '/home/article',
       title: '内容管理',
       icon: 'icon-neirong'
     },
     {
-      path: '/image',
+      path: '/home/image',
       title: '素材管理',
       icon: 'icon-sucai'
     },
     {
-      path: '/publish',
+      path: '/home/publish',
       title: '发布文章',
       icon: 'icon-fabu'
     },
     {
-      path: '/comment',
+      path: '/home/comment',
       title: '评论管理',
       icon: 'icon-pinglun'
     },
     {
-      path: '/fans',
+      path: '/home/fans',
       title: '粉丝管理',
       icon: 'icon-icon-test'
     },
     {
-      path: '/settings',
+      path: '/home/settings',
       title: '个人设置',
       icon: 'icon-shezhi'
     }
