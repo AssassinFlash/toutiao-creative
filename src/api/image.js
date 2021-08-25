@@ -21,3 +21,20 @@ export const uploadImage = data => {
     data
   })
 }
+
+// 收藏图片
+export const collectImage = (imageID, collect) => {
+  return requestNet({
+    method: 'PUT',
+    url: `/mp/v1_0/user/images/${imageID}`,
+    data: { collect }
+  })
+}
+
+// 删除图片
+export const deleteImage = imageID => {
+  return requestNet({
+    method: 'DELETE',
+    url: `/mp/v1_0/user/images/${imageID}`
+  })
+}

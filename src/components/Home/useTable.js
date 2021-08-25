@@ -10,6 +10,7 @@ export function useTableColumns () {
     {
       dataIndex: 'cover',
       title: '封面',
+      align: 'center',
       width: '20%',
       slots: {
         customRender: 'image'
@@ -31,11 +32,13 @@ export function useTableColumns () {
     {
       dataIndex: 'pubdate',
       title: '发布时间',
+      align: 'center',
       width: '20%'
     },
     {
       data: 'methods',
       title: '操作',
+      align: 'center',
       slots: {
         customRender: 'action'
       }

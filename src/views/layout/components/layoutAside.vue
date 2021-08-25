@@ -2,7 +2,7 @@
   <a-menu
     id="dddddd"
     mode="inline"
-    v-model:selectedKeys="selectedKeys"
+    :selectedKeys="$store.state.selectedKeys"
   >
     <div class="title-image">
       <img src="../../../assets/superman.svg" alt="">
@@ -22,8 +22,9 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+// import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+// import { useStore } from 'vuex'
 import useMenu from '@/components/Home/useMenu'
 import { createFromIconfontCN } from '@ant-design/icons-vue'
 
@@ -36,10 +37,15 @@ export default {
     IconFont
   },
   setup () {
+    // vuex设置
+    // const store = useStore()
+    // console.log(store.state.selectedKeys[0])
+
     // 生成菜单项
     const menu = useMenu()
     // 选择的菜单项
-    const selectedKeys = ref(['/home'])
+    // const selectedKeys = ref([])
+    // selectedKeys.value.push(store.state.selectedKeys[0])
     // 获得路由对象
     const $router = useRouter()
 
@@ -48,7 +54,6 @@ export default {
       $router.push(path)
     }
     return {
-      selectedKeys,
       toWebSite,
       menu
     }

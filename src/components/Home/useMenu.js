@@ -2,7 +2,7 @@ export default function () {
   // 生成侧边栏菜单
   return [
     {
-      path: '/home',
+      path: '/home/index',
       title: '首页',
       icon: 'icon-shouye-black'
     },

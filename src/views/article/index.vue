@@ -104,7 +104,8 @@
             <template #action="{ record }">
               <span>
                 <a-button type="text"
-                          shape="circle" @click="toPublishPage(record.key)">
+                          shape="circle"
+                          @click="toPublishPage(record.key)">
                   <template #icon>
                     <icon-font type="icon-gai-copy"></icon-font>
                   </template>
@@ -113,7 +114,8 @@
                 <a-popconfirm title="确定要删除该文章吗？"
                               ok-text="确定"
                               cancel-text="返回"
-                              @confirm="onConfirmDelete(record.key,record.title)">
+                              :disabled="record.statusDisabled"
+                              @confirm="onConfirmDelete(record)">
                   <template #icon>
                     <icon-font type="icon-shanchu"></icon-font>
                   </template>
@@ -223,17 +225,24 @@ export default {
 
     // 删除文章的方法
     let resDelete = reactive({})
-    const onConfirmDelete = async (articleID, articleTitle) => {
+    const onConfirmDelete = async (article) => {
       try {
-        resDelete = await deleteArticle(articleID)
+        loading.value = true
+        article.statusDisabled = true
+        resDelete = await deleteArticle(article.key)
         if (resDelete.status === 204) {
-          message.success(`删除：${articleTitle} 成功`, 3)
+          message.success(`删除：${article.title} 成功`, 3)
           await loadArticles(filterArticle)
+          article.statusDisabled = false
         } else {
-          message.error(`删除：${articleTitle} 失败，${resDelete.status}`)
+          message.error(`删除：${article.title} 失败，${resDelete.status}`)
+          loading.value = false
+          article.statusDisabled = false
         }
       } catch (error) {
-        message.error(`删除：${articleTitle} 失败，${error}`)
+        message.error(`删除：${article.title} 失败，${error}`)
+        loading.value = false
+        article.statusDisabled = false
       }
     }
 

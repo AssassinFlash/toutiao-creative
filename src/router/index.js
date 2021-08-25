@@ -2,6 +2,7 @@ import {
   createRouter,
   createWebHashHistory
 } from 'vue-router'
+import store from '@/store/index'
 
 const routes = [{
   path: '/login',
@@ -48,6 +49,24 @@ const routes = [{
         requireAuth: true
       },
       component: () => import('@/views/image/index')
+    },
+    {
+      path: '/home/comment',
+      name: 'Comment',
+      // 元信息
+      meta: {
+        requireAuth: true
+      },
+      component: () => import('@/views/comment/index')
+    },
+    {
+      path: '/home/settings',
+      name: 'Settings',
+      // 元信息
+      meta: {
+        requireAuth: true
+      },
+      component: () => import('@/views/settings')
     }
   ]
 }
@@ -69,9 +88,12 @@ router.beforeEach((to, from, next) => {
   const userToken = window.localStorage.getItem('user')
   if (to.path !== '/home/login') {
     if (to.meta.requireAuth === true) {
-      console.log('该页面不是登录页，且需要校验')
+      // console.log('该页面不是登录页，且需要校验')
       if (userToken) {
         console.log('已登录，允许通过')
+        // 更改菜单选中项
+        store.commit('popSelectedKeys')
+        store.commit('setSelectedKeys', to.path)
         next()
       } else {
         console.log('未登录，跳转到登录页')

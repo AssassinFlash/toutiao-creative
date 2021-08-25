@@ -44,16 +44,23 @@
                   <img :src="image.url"
                        alt="">
                   <p class="icon-placement">
-                    <a-button shape="circle"
+                    <a-button :disabled="image.statusDisabled"
+                              shape="circle"
                               type="text"
+                              @click="onCollect(image)"
                               style="font-size: 20px;line-height:20px">
-                      <HeartTwoTone twoToneColor="#eb2f96" />
+                              <!-- @click="onCollect(image.id,image.is_collected)"> -->
+                      <HeartOutlined :style="{color:'#eb2f96'}"
+                                     v-show="!image.is_collected" />
+                      <HeartFilled :style="{color: '#F20077'}"
+                                   v-show="image.is_collected" />
                     </a-button>
-                    <a-button shape="circle"
-                              type="text"
-                              style="font-size: 20px;line-height:20px">
-                      <DeleteOutlined />
-                    </a-button>
+                    <a-popconfirm title="确定要删除该图片吗？"
+                                  ok-text="确认删除"
+                                  cancel-text="返回"
+                                  @confirm="onDelete(image.id)">
+                      <DeleteOutlined class='delete-image' />
+                    </a-popconfirm>
                   </p>
                 </div>
               </a-col>
@@ -70,16 +77,14 @@
               -->
               <a-upload v-model:file-list="imageList"
                         name="image"
+                        :multiple="false"
                         list-type="picture-card"
                         class="avatar-uploader"
                         action="http://api-toutiao-web.itheima.net/mp/v1_0/user/images"
                         :headers="uploadHeader"
                         @change="handleChange">
-                <img v-if="imageUrl"
-                     :src="imageUrl"
-                     alt="image" />
-                <div v-else>
-                  <loading-outlined v-if="正在上传"></loading-outlined>
+                <div>
+                  <loading-outlined v-if="spinning">正在上传</loading-outlined>
                   <plus-outlined v-else></plus-outlined>
                   <div class="ant-upload-text">上传</div>
                 </div>
@@ -101,7 +106,8 @@
 
 <script>
 import {
-  HeartTwoTone,
+  HeartOutlined,
+  HeartFilled,
   DeleteOutlined,
   CloudUploadOutlined,
   PlusOutlined,
@@ -109,12 +115,13 @@ import {
 } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
 import { Suspense, ref, reactive, onBeforeMount } from 'vue'
-import { getImages } from '@/api/image'
+import { getImages, collectImage, deleteImage } from '@/api/image'
 export default {
   name: 'ImageIndex',
   components: {
     Suspense,
-    HeartTwoTone,
+    HeartOutlined,
+    HeartFilled,
     DeleteOutlined,
     CloudUploadOutlined,
     PlusOutlined,
@@ -174,7 +181,35 @@ export default {
       totalCount.value = res.data.data.total_count
       imagesArr.value = res.data.data.results
       spinning.value = false
-      // console.log(res.data)
+      console.log(res.data)
+    }
+
+    // 点击收藏事件
+    const onCollect = async function (image) {
+      // 已收藏，则取消收藏
+      // 未收藏，则添加收藏
+      image.statusDisabled = true
+      spinning.value = true
+      const res = await collectImage(image.id, !image.is_collected)
+      console.log(res.data)
+      if (res.data.data.collect) {
+        message.success('收藏图片成功')
+      } else {
+        message.success('取消收藏图片成功')
+      }
+      await loadImages(imagesParams)
+      image.statusDisabled = false
+    }
+
+    // 删除图片事件
+    const onDelete = async function (imageID) {
+      const res = await deleteImage(imageID)
+      if (res.status === 204) {
+        message.success('删除图片成功')
+        await loadImages(imagesParams)
+      } else {
+        message.error('删除图片失败')
+      }
     }
 
     onBeforeMount(async () => {
@@ -182,16 +217,18 @@ export default {
     })
 
     return {
-      spinning,
-      onRadioChange,
-      uploadVisible,
-      imageList,
-      uploadHeader,
-      handleChange,
-      imagesParams,
-      totalCount,
-      imagesArr,
-      loadImages
+      spinning, // 加载页面状态
+      onRadioChange, // 全部还是收藏单选框
+      uploadVisible, // 上传抽屉组件是否显示
+      imageList, // 上传图片列表
+      uploadHeader, // 上传请求头
+      handleChange, // 上传完成与失败时的方法
+      imagesParams, // 接口要求的图片参数
+      totalCount, // 接口返回的图片总数
+      imagesArr, // 接口返回的当前页图片数组
+      loadImages, // 向接口请求返回图片的方法
+      onCollect,
+      onDelete
     }
   }
 }
@@ -235,5 +272,10 @@ export default {
   justify-content: center;
   align-items: center;
   padding-top: 20px;
+}
+.delete-image {
+  font-size: 20px;
+  line-height: 20px;
+  padding: 4px 0 0 20px;
 }
 </style>
