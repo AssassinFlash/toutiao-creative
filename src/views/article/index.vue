@@ -110,7 +110,7 @@
                     <icon-font type="icon-gai-copy"></icon-font>
                   </template>
                 </a-button>
-                <a-divider type="vertical" />
+                <a-divider type="vertical"/>
                 <a-popconfirm title="确定要删除该文章吗？"
                               ok-text="确定"
                               cancel-text="返回"
@@ -119,7 +119,7 @@
                   <template #icon>
                     <icon-font type="icon-shanchu"></icon-font>
                   </template>
-                  <DeleteOutlined />
+                  <DeleteOutlined/>
                 </a-popconfirm>
               </span>
             </template>
@@ -133,7 +133,7 @@
                           :total="totalCount"
                           :disabled="loading"
                           :show-total="total => `总共 ${total} 条结果`"
-                          @change="loadArticles(filterArticle)" />
+                          @change="loadArticles(filterArticle)"/>
           </div>
         </a-card>
       </template>
@@ -220,7 +220,10 @@ export default {
     // 修改文章的方法
     const $router = useRouter()
     const toPublishPage = function (articleID) {
-      $router.push({ name: 'Publish', params: { id: articleID }})
+      $router.push({
+        name: 'Publish',
+        params: { id: articleID }
+      })
     }
 
     // 删除文章的方法
@@ -289,6 +292,7 @@ export default {
 .article-container {
   padding: 10px;
 }
+
 .filter-card {
   margin-bottom: 10px;
 }

@@ -12,11 +12,8 @@ export default createStore({
     },
     setSelectedKeys: function (state, path) {
       state.selectedKeys.push(path)
-      // console.log(state.selectedKeys)
     }
   },
-  actions: {
-  },
-  modules: {
-  }
+  actions: {},
+  modules: {}
 })

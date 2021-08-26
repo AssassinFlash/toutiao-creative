@@ -12,6 +12,7 @@
     "ant-design-vue": "^2.2.6",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "cropperjs": "^1.5.12",
     "element-plus": "^1.0.2-beta.70",
     "json-bigint": "^1.0.0",
     "vue": "^3.0.0",

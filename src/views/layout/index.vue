@@ -1,41 +1,46 @@
 <template>
   <a-layout class="layout-container">
     <!--侧边栏-->
-    <a-layout-sider class="layout-aside" collapsible v-model:collapsed="collapse">
+    <a-layout-sider class="layout-aside" collapsible
+                    v-model:collapsed="collapse">
       <app-aside class="aside-menu"></app-aside>
     </a-layout-sider>
     <a-layout>
       <!--顶部-->
       <Suspense>
-        <a-layout-header class="layout-header">
-          <span class="title">志豪今日头条管理后台</span>
-          <a-dropdown>
-            <div class="avatar-wrap">
-              <a-spin :spinning="spin">
-                <img :src="userProfile.photo" alt="" v-if="userProfile.photo">
-              </a-spin>
-              <span>{{ userProfile.name }}</span>
-              <icon-font type="icon-xiala" class="avatar-down"/>
-            </div>
-            <template #overlay>
-              <a-menu style="width: 150px;right: -40px">
-                <a-menu-item>
-                  <icon-font type="icon-shezhi" class="menu-item-icon"></icon-font>
-                  <span class="menu-item-title">个人设置</span>
-                </a-menu-item>
-                <a-menu-item @click="onLogout">
-                  <icon-font type="icon-tuichu"></icon-font>
-                  <span>用户退出</span>
-                </a-menu-item>
-              </a-menu>
-            </template>
-          </a-dropdown>
-        </a-layout-header>
+        <template #default>
+          <a-layout-header class="layout-header">
+            <span class="title">志豪今日头条管理后台</span>
+            <a-dropdown>
+              <div class="avatar-wrap">
+                <a-spin :spinning="spin">
+                  <img :src="userProfile.photo" alt=""
+                       v-if="userProfile.photo">
+                </a-spin>
+                <span>{{ userProfile.name }}</span>
+                <icon-font type="icon-xiala" class="avatar-down"/>
+              </div>
+              <template #overlay>
+                <a-menu style="width: 150px;right: -40px">
+                  <a-menu-item>
+                    <icon-font type="icon-shezhi"
+                               class="menu-item-icon"></icon-font>
+                    <span class="menu-item-title">个人设置</span>
+                  </a-menu-item>
+                  <a-menu-item @click="onLogout">
+                    <icon-font type="icon-tuichu"></icon-font>
+                    <span>用户退出</span>
+                  </a-menu-item>
+                </a-menu>
+              </template>
+            </a-dropdown>
+          </a-layout-header>
+        </template>
       </Suspense>
       <!--内容-->
       <a-layout-content class="layout-main" style="overflow: auto">
         <!--子路由出口-->
-        <router-view></router-view>
+        <router-view @updateUserProfile="getComMethod()"></router-view>
       </a-layout-content>
     </a-layout>
   </a-layout>
@@ -46,7 +51,7 @@ import AppAside from './components/layoutAside'
 import { createFromIconfontCN, BellOutlined } from '@ant-design/icons-vue'
 import { Modal, message } from 'ant-design-vue'
 import { getUserProfile } from '@/api/user'
-import { ref, onBeforeMount, createVNode } from 'vue'
+import { Suspense, ref, createVNode } from 'vue'
 import { useRouter } from 'vue-router'
 
 const IconFont = createFromIconfontCN({
@@ -56,7 +61,8 @@ export default {
   name: 'index',
   components: {
     AppAside,
-    IconFont
+    IconFont,
+    Suspense
   },
   setup () {
     // 获得路由对象
@@ -67,16 +73,23 @@ export default {
     const spin = ref(true)
 
     const userProfile = ref({})
+    const loadUserProfile = async function () {
+      const res = await getUserProfile(window.localStorage.getItem('user'))
+      userProfile.value = res.data.data
+      spin.value = false
+    }
+    loadUserProfile()
     // 利用onBeforeMount钩子函数的特性，在挂载之前获取到用户信息
     // 但是布局要配合Suspense标签使用，不然由于setup函数处于created钩子之间的生命周期
     // 比beforeMount要早，导致异步函数还没开始处理，userProfile就return出去了，这时候userProfile是空的
     // 如果不加Suspense标签，那么使用userProfile的地方就会因为userProfile为空而报错
-    onBeforeMount(async () => {
-      const res = await getUserProfile(window.localStorage.getItem('user'))
-      userProfile.value = res.data.data
-      spin.value = false
-    })
+    /*    onBeforeMount(async () => {
+          await loadUserProfile()
+        })*/
 
+    const getComMethod = function () {
+      loadUserProfile()
+    }
     // 方法
     const onLogout = () => {
       // 弹出对话框确认是否退出
@@ -115,6 +128,7 @@ export default {
       userProfile,
       collapse,
       spin,
+      getComMethod,
       onLogout
     }
   }

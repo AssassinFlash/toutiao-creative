@@ -22,14 +22,14 @@
                 <a-tag color="success"
                        v-show="record.comment_status">
                   <template #icon>
-                    <check-circle-outlined />
+                    <check-circle-outlined/>
                   </template>
                   正常评论
                 </a-tag>
                 <a-tag color="error"
                        v-show="!record.comment_status">
                   <template #icon>
-                    <close-circle-outlined />
+                    <close-circle-outlined/>
                   </template>
                   不能评论
                 </a-tag>
@@ -42,7 +42,9 @@
                   <a-button :danger="record.comment_status"
                             :disabled="record.statusDisabled"
                             type="primary"
-                            size="middle">{{record.comment_status? '关闭评论' : '打开评论'}}</a-button>
+                            size="middle">
+                    {{ record.comment_status ? '关闭评论' : '打开评论' }}
+                  </a-button>
                 </a-popconfirm>
               </template>
             </a-table>
@@ -56,7 +58,7 @@
                             showQuickJumper
                             :defaultPageSize="articlesParams.per_page"
                             :show-total="total => `总共 ${total} 条结果`"
-                            @change="loadArticles(articlesParams)" />
+                            @change="loadArticles(articlesParams)"/>
             </div>
           </a-spin>
         </template>
@@ -72,6 +74,7 @@ import { CheckCircleOutlined, CloseCircleOutlined } from '@ant-design/icons-vue'
 import { message } from 'ant-design-vue'
 import locale from 'ant-design-vue/es/date-picker/locale/zh_CN'
 import { Suspense, ref, reactive, onBeforeMount } from 'vue'
+
 export default {
   name: 'CommentIndex',
   components: {

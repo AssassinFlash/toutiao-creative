@@ -25,3 +25,21 @@ export const getUserProfile = (userToken) => {
     url: '/mp/v1_0/user/profile'
   })
 }
+
+// 修改用户头像
+export const updateUserphoto = (data) => {
+  return requestNet({
+    method: 'PATCH',
+    url: '/mp/v1_0/user/photo',
+    data
+  })
+}
+
+// 修改用户基本信息
+export const updateUser = data => {
+  return requestNet({
+    method: 'PATCH',
+    url: '/mp/v1_0/user/profile',
+    data
+  })
+}
