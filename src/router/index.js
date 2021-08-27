@@ -67,6 +67,15 @@ const routes = [{
         requireAuth: true
       },
       component: () => import('@/views/settings')
+    },
+    {
+      path: '/home/fans',
+      name: 'Fans',
+      // 元信息
+      meta: {
+        requireAuth: true
+      },
+      component: () => import('@/views/fans')
     }
   ]
 }
