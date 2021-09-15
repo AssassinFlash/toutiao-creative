@@ -11,4 +11,5 @@ import 'ant-design-vue/dist/antd.css'
 
 // 引入全局样式
 import './styles/index.less'
+
 createApp(App).use(store).use(router).use(Antd).mount('#app')

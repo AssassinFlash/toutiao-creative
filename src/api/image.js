@@ -13,11 +13,13 @@ export const getImages = params => {
   })
 }
 
-// 上传图片素材
+// 上传图片素材，将本地图片处理成可在网上查看的url
 export const uploadImage = data => {
   return requestNet({
     method: 'POST',
     url: '/mp/v1_0/user/images',
+    // 一般文件上传的接口都要求把请求头中的Content-type设置为multipart/form-data
+    // 使用axios上传文件的话不需要手动设置，只需给data一个FormData对象即可
     data
   })
 }

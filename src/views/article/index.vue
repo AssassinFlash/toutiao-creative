@@ -298,7 +298,7 @@ export default {
 }
 
 .article-image {
-  width: 150px;
+  width: 100px;
   height: 100px;
 }
 

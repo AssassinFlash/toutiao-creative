@@ -4,81 +4,86 @@ import {
 } from 'vue-router'
 import store from '@/store/index'
 
-const routes = [{
-  path: '/login',
-  name: 'Login',
-  component: () => import('../views/login/index.vue')
-},
-{
-  path: '/home', // 有了默认子路由，父路由就不要设置命名
-  redirect: { name: 'Home' },
-  component: () => import('@/views/layout/index'),
-  children: [
-    {
-      path: '/home/index', // path为空，为默认子路由，即父路由的路由出口默认渲染这个路由
-      name: 'Home',
-      // 配置元信息，表示需要对用户令牌进行校验
-      meta: {
-        requireAuth: true
+const routes = [
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('../views/login/index.vue')
+  },
+  {
+    path: '/',
+    redirect: { name: 'Home' }
+  },
+  {
+    path: '/home', // 有了默认子路由，父路由就不要设置命名
+    redirect: { name: 'Home' },
+    component: () => import('@/views/layout/index'),
+    children: [
+      {
+        path: '/home/index', // path为空，为默认子路由，即父路由的路由出口默认渲染这个路由
+        name: 'Home',
+        // 配置元信息，表示需要对用户令牌进行校验
+        meta: {
+          requireAuth: true
+        },
+        component: () => import('@/views/home/index')
       },
-      component: () => import('@/views/home/index')
-    },
-    {
-      path: '/home/article',
-      name: 'Article',
-      // 元信息
-      meta: {
-        requireAuth: true
+      {
+        path: '/home/article',
+        name: 'Article',
+        // 元信息
+        meta: {
+          requireAuth: true
+        },
+        component: () => import('@/views/article/index')
       },
-      component: () => import('@/views/article/index')
-    },
-    {
-      path: '/home/publish',
-      name: 'Publish',
-      // 元信息
-      meta: {
-        requireAuth: true
+      {
+        path: '/home/publish',
+        name: 'Publish',
+        // 元信息
+        meta: {
+          requireAuth: true
+        },
+        component: () => import('@/views/publish/index')
       },
-      component: () => import('@/views/publish/index')
-    },
-    {
-      path: '/home/image',
-      name: 'Images',
-      // 元信息
-      meta: {
-        requireAuth: true
+      {
+        path: '/home/image',
+        name: 'Images',
+        // 元信息
+        meta: {
+          requireAuth: true
+        },
+        component: () => import('@/views/image/index')
       },
-      component: () => import('@/views/image/index')
-    },
-    {
-      path: '/home/comment',
-      name: 'Comment',
-      // 元信息
-      meta: {
-        requireAuth: true
+      {
+        path: '/home/comment',
+        name: 'Comment',
+        // 元信息
+        meta: {
+          requireAuth: true
+        },
+        component: () => import('@/views/comment/index')
       },
-      component: () => import('@/views/comment/index')
-    },
-    {
-      path: '/home/settings',
-      name: 'Settings',
-      // 元信息
-      meta: {
-        requireAuth: true
+      {
+        path: '/home/settings',
+        name: 'Settings',
+        // 元信息
+        meta: {
+          requireAuth: true
+        },
+        component: () => import('@/views/settings')
       },
-      component: () => import('@/views/settings')
-    },
-    {
-      path: '/home/fans',
-      name: 'Fans',
-      // 元信息
-      meta: {
-        requireAuth: true
-      },
-      component: () => import('@/views/fans')
-    }
-  ]
-}
+      {
+        path: '/home/fans',
+        name: 'Fans',
+        // 元信息
+        meta: {
+          requireAuth: true
+        },
+        component: () => import('@/views/fans')
+      }
+    ]
+  }
 ]
 
 const router = createRouter({
