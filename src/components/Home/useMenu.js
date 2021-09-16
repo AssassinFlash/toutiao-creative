@@ -26,11 +26,11 @@ export default function () {
       title: '评论管理',
       icon: 'icon-pinglun'
     },
-    {
-      path: '/home/fans',
-      title: '粉丝管理',
-      icon: 'icon-icon-test'
-    },
+    // {
+    //   path: '/home/fans',
+    //   title: '粉丝管理',
+    //   icon: 'icon-icon-test'
+    // },
     {
       path: '/home/settings',
       title: '个人设置',

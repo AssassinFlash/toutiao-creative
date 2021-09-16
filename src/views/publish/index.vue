@@ -221,6 +221,10 @@ export default {
         console.log(data)
         articleParams.value.cover.images[data.index] = data.url
       })
+      emitter.on('coverChecked', data => {
+        console.log(data)
+        articleParams.value.cover.images[data.index] = data.url
+      })
     })
     return {
       toolbarOptions,

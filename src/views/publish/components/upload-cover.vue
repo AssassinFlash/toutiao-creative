@@ -3,13 +3,16 @@
     <div class="cover-wrap">
       <img ref="coverImage" class="cover-image" :src="originCoverImage?originCoverImage:''" alt="">
     </div>
-    <a-modal v-model:visible="visible" @ok="handleOk">
+    <a-modal width="70%" v-model:visible="visible" @ok="handleOk">
       <template #footer>
         <a-button key="back" @click="visible=false">返回</a-button>
         <a-button key="submit" type="primary" :loading="loading" @click="handleOk">确定</a-button>
       </template>
       <a-tabs type="card" v-model:activeKey="activeKey">
-        <a-tab-pane key="1" tab="素材库">素材库</a-tab-pane>
+        <a-tab-pane key="1" tab="素材库">
+          <!--ref有两个作用：1.作用到普通HTML标签上获取DOM，2.作用到组件上获取组件实例-->
+          <ImageList ref="imageList"></ImageList>
+        </a-tab-pane>
         <a-tab-pane key="2" tab="上传图片">
           <!--          监听图片上传-->
           <div style="margin-bottom: 10px">
@@ -29,11 +32,16 @@ import { ref } from 'vue'
 import { message } from 'ant-design-vue'
 import { uploadImage } from '@/api/image'
 import emitter from '@/utils/eventBus'
+import ImageList from '@/views/image/components/ImageList'
 
 export default {
   name: 'upload-cover',
+  components: {
+    ImageList
+  },
   props: ['selfKey', 'originCoverImage'],
   setup (props) {
+    const imageList = ref()
     const visible = ref(false)
     const activeKey = ref('1')
     const loading = ref(false)
@@ -73,9 +81,24 @@ export default {
           previewImg.value.src = ''
         }
       }
+      if (activeKey.value === '1') {
+        const checked = imageList.value.checked
+        if (checked === null) {
+          message.info('请选择封面图片')
+        } else {
+          // 把图片发送到父组件
+          emitter.emit('coverChecked', {
+            url: imageList.value.imagesArr[checked].url,
+            index: props.selfKey
+          })
+          // 关闭对话框
+          visible.value = false
+        }
+      }
       loading.value = false
     }
     return {
+      imageList,
       visible,
       activeKey,
       loading,
